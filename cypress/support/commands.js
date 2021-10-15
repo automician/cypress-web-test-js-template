@@ -28,6 +28,20 @@ Cypress.Commands.add(
   'setValue', 
   { prevSubject: 'element'}, 
   (subject, value) => { 
-    cy.get(subject).clear().type(value); 
+    cy.get(subject).clear().type(value)
   }
 )
+
+function isWordWithDashesUnderscoresOrNumbers(selector) {
+  return /^[a-zA-Z_0-9\-]+$/g.test(selector)
+}
+
+Cypress.Commands.add('$', (selector, ...args) => {
+  if (selector.startsWith('text=')) {
+    return cy.contains(selector.substring(5))
+  } else if (isWordWithDashesUnderscoresOrNumbers(selector)) {
+    return cy.get(`[data-qa=${selector}]`, ...args)
+  } else {
+    return cy.get(selector)
+  }
+})
