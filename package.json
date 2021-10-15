@@ -1,12 +1,18 @@
 {
   "name": "cypress-js-web-test",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "javascript + cypress web ui tests project template ",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "keywords": [
+    "testing",
+    "test",
+    "cypress"
+  ],
+  "author": {
+    "name": "Iakiv Kramarenko",
+    "email": "yashaka@gmail.com"
+  },
+  "license": "MIT"
 }
