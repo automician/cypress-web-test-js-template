@@ -1,0 +1,26 @@
+{
+    "plugins": [
+        "cypress",
+        "chai-friendly"
+    ],
+    "globals": {
+        "cy": true,
+        "Cypress": true
+    },
+    "env": {
+        "cypress/globals": true,
+        "es2021": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 12,
+        "sourceType": "module"
+    },
+    "extends": [
+        "plugin:cypress/recommended",
+        "plugin:chai-friendly/recommended"
+    ],
+    "rules": {
+        "max-len": ["error", { "code": 80, "ignoreComments": true}],
+        "cypress/no-pause": "error"
+    }
+}
