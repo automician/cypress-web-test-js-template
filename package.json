@@ -14,5 +14,8 @@
     "name": "Iakiv Kramarenko",
     "email": "yashaka@gmail.com"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "cypress": "^8.6.0"
+  }
 }
