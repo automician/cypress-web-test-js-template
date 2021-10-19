@@ -21,3 +21,7 @@ import './commands'
 
 
 global.browser = cy
+
+
+import { Locator } from './locator'
+global.s = (selector) => new Locator(selector)

@@ -10,6 +10,11 @@ declare namespace Cypress {
      */
     setValue(value: string): Chainable<any>
 
+    // TODO: consider ranaming $ to something else to have no conflicts with Cypress.$ 
+    //       that is an exposed JQuery's $ from Cypress context
+    //       maybe to something like cy.by(selector)
+    //       or made by as alias to get
+    //       then override get to be like the $ implemenation below
     /**
      * Alias to cy.get(selector) with extra features:
      * - if starts with 'text=Some text' then equals to cy.contains('Some text')
