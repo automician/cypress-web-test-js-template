@@ -32,6 +32,14 @@ Cypress.Commands.add(
   }
 )
 
+Cypress.Commands.add(
+  'pressEnter', 
+  { prevSubject: 'element'}, 
+  (subject, value) => { 
+    cy.get(subject).type('{enter}')
+  }
+)
+
 function isWordWithDashesUnderscoresOrNumbers(selector) {
   return /^[a-zA-Z_0-9\-]+$/g.test(selector)
 }

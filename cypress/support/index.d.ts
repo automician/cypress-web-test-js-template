@@ -8,7 +8,14 @@ declare namespace Cypress {
      * @example
      * cy.get('#foo').setValue('bar')
      */
-    setValue(value: string): Chainable<any>
+    setValue(value: string): Chainable<any> // TODO: shouldn't it be Chainable<Subject> here?
+
+    /**
+     * Alias to .type('{enter}')
+     * @example
+     * cy.get('#comment').type('hello, world!').pressEnter()
+     */
+    pressEnter(): Chainable<any>
 
     // TODO: consider ranaming $ to something else to have no conflicts with Cypress.$ 
     //       that is an exposed JQuery's $ from Cypress context
