@@ -17,6 +17,13 @@ declare namespace Cypress {
      */
     pressEnter(): Chainable<any>
 
+    /**
+     * Alias to .type('{esc}')
+     * @example
+     * cy.get('#comment').type('hello, world!').pressEscape()
+     */
+    pressEscape(): Chainable<any>
+
     // TODO: consider overriding get to be like the by implemenation below
     //       and then use by as alias to original get
     /**

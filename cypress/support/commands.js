@@ -40,6 +40,14 @@ Cypress.Commands.add(
   }
 )
 
+Cypress.Commands.add(
+  'pressEscape', 
+  { prevSubject: 'element'}, 
+  (subject, value) => { 
+    cy.get(subject).type('{esc}')
+  }
+)
+
 Cypress.Commands.add('by', (selector, ...args) => {
 
   const isWordWithDashesUnderscoresOrNumbers = (selector) => {
