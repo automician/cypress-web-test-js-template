@@ -40,11 +40,12 @@ Cypress.Commands.add(
   }
 )
 
-function isWordWithDashesUnderscoresOrNumbers(selector) {
-  return /^[a-zA-Z_0-9\-]+$/g.test(selector)
-}
+Cypress.Commands.add('by', (selector, ...args) => {
 
-Cypress.Commands.add('$', (selector, ...args) => {
+  const isWordWithDashesUnderscoresOrNumbers = (selector) => {
+    return /^[a-zA-Z_0-9\-]+$/g.test(selector)
+  }
+
   if (selector.startsWith('text=')) {
     return cy.contains(selector.substring(5))
   } else if (isWordWithDashesUnderscoresOrNumbers(selector)) {
