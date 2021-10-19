@@ -6,7 +6,7 @@ describe('TodoMVC user', () => {
     s('#new-todo').get().type('a').pressEnter()
     s('#new-todo').get().type('b').pressEnter()
     s('#new-todo').get().type('c').pressEnter()
-    s('#todo-list>li').get().should('have.length', 3)
+    s('#todo-list>li').get().should(have.length, 3)
 
   })
 

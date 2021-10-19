@@ -25,3 +25,20 @@ global.browser = cy
 
 import { Locator } from './locator'
 global.s = (selector) => new Locator(selector)
+
+
+global.be = {
+  empty: 'be.empty',
+  enabled: 'be.enabled',
+  not: {
+    empty: 'not.be.empty',
+    enabled: 'not.be.enabled',
+  }
+}
+
+global.have = {
+  length: 'have.length',
+  no: {
+    length: 'not.have.length',
+  }
+}
