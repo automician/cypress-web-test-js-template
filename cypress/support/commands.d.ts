@@ -17,11 +17,8 @@ declare namespace Cypress {
      */
     pressEnter(): Chainable<any>
 
-    // TODO: consider ranaming $ to something else to have no conflicts with Cypress.$ 
-    //       that is an exposed JQuery's $ from Cypress context
-    //       maybe to something like cy.by(selector)
-    //       or made by as alias to get
-    //       then override get to be like the $ implemenation below
+    // TODO: consider overriding get to be like the by implemenation below
+    //       and then use by as alias to original get
     /**
      * Alias to cy.get(selector) with extra features:
      * - if starts with 'text=Some text' then equals to cy.contains('Some text')
@@ -32,6 +29,6 @@ declare namespace Cypress {
      * cy.$('element-with-dedicated-data-qa-attribute-value').click()
      * cy.$('#element-with-standard-id-attribute').click()
      */
-    $(value: string): Chainable<any>
+    by(selector: string): Chainable<any>
   }
 }

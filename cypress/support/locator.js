@@ -5,6 +5,6 @@ export class Locator {
   }
 
   get() {
-    return cy.$(this.selector)
+    return cy.by(this.selector)
   }
 }
