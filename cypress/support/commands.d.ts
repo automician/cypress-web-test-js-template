@@ -32,10 +32,10 @@ declare namespace Cypress {
      * - if contains only words separated by _ or - then equals to cy.get(`[data-qa=${selector}]`)
      * - equals to cy.get(selector) otherwise
      * @example
-     * cy.$('text=Element containing this text').click()
-     * cy.$('element-with-dedicated-data-qa-attribute-value').click()
-     * cy.$('#element-with-standard-id-attribute').click()
+     * cy.the('text=Element containing this text').click()
+     * cy.the('element-with-dedicated-data-qa-attribute-value').click()
+     * cy.the('#element-with-standard-id-attribute').click()
      */
-    by(selector: string): Chainable<any>
+    the(selector: string): Chainable<any>
   }
 }

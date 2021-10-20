@@ -48,17 +48,28 @@ Cypress.Commands.add(
   }
 )
 
-Cypress.Commands.add('by', (selector, ...args) => {
+/* You can consider overriding the 'get' cypress command
+ * But in this framework we kept the original 'get' without extra magic
+ * for consistency with Cypress and easier understanding by newcomers
+ * which can be lost in the variety of differences 
+ */
+Cypress.Commands.add('the', (selector, ...args) => {
+  // TODO: find better name
+  //       now it's called by definite article «the»
+  //       pointing to the fact that it will find the actual element in DOM
+  //       i.e. it's not Lazy element (that probably would use indefinite «a» or «an»)
+  // TODO: make it also work at "subject" context
 
   const isWordWithDashesUnderscoresOrNumbers = (selector) => {
     return /^[a-zA-Z_0-9\-]+$/g.test(selector)
   }
 
-  if (selector.startsWith('text=')) {
+  // TODO: consider moving these selectors transformations to config or plugins 
+  if (selector.startsWith('text=')) {  
     return cy.contains(selector.substring(5))
   } else if (isWordWithDashesUnderscoresOrNumbers(selector)) {
     return cy.get(`[data-qa=${selector}]`, ...args)
   } else {
-    return cy.get(selector)
+    return cy.get(selector, ...args)
   }
 })
