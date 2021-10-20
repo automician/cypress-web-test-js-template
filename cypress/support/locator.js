@@ -42,6 +42,22 @@ export class Locator {
     }
   }
 
+  /* You can consider override original cy.find(selector, options) 
+   * for same behaviour as below
+   * Here we build the corresponding assertion only into Locator's find
+   * to leave the original cypress behaviour untouch and so move obvious
+   * to the common Cypress user
+   * 
+   * By the way, we could name the method below as `element` 
+   * for consistency with Selene from Python,
+   * but we can't do this, because in Cypress and JQuery 
+   * we don't have separation betwean element and elements collection,
+   * hence, we should use more "general" name, like `find` ;)
+   */
+  find(selector, options={}) {
+    return this.should(have.elements, selector).find(selector, options)
+  }
+
   // --- Assertions --- //
 
   should(match, ...expected) {

@@ -139,6 +139,43 @@ const elementsCollectionHaveTexts = (_chai, utils) => {
 
 chai.use(elementsCollectionHaveTexts)
 
+const elementsCollectionHaveInnerElements= (_chai, utils) => {
+
+  function assertElements(selector) {
+    const $elements = this._obj
+    const actualFoundLength = $elements.has(selector).length
+
+    this.assert(
+      // expression to be tested
+      actualFoundLength >= 0,
+      // msg or fn to describe failure
+      `elements by ${$elements.selector} `
+      + 'should have more than 0 elements found by: #{exp}'
+      + '\nactual found elements length: #{act}'
+      + '\nactual colllection:'
+      + '\n#{this}'
+      ,    
+      // msg or fn to describe negated failure
+      `expected elements by ${$elements.selector} `
+      + 'should have 0 elmeents found by: #{exp}'
+      + '\nactual found elements length: #{act}'
+      + '\nactual colllection:'
+      + '\n#{this}'
+      ,    
+      // expected
+      selector,
+      // actual
+      actualFoundLength, 
+      // show diff?
+      false, 
+    )
+  }
+
+  _chai.Assertion.addMethod('elements', assertElements)
+}
+
+chai.use(elementsCollectionHaveInnerElements)
+
 // --- AIASES --- // 
 
 export const be = {
@@ -165,6 +202,8 @@ export const be = {
 }
 
 export const have = {
+  the: 'have.elements',
+  elements: 'have.elements',
   exactText: 'have.text', // TODO: implement as custom to log exact name
   text: 'include.text',
   exactTexts: 'have.exactTexts',
@@ -180,6 +219,7 @@ export const have = {
   lengthAtMost: 'have.length.at.most',
   lengthWithin: 'have.length.within',
   no: {
+    elements: 'not.have.elements',
     exactText: 'not.have.text', // TODO: implement as custom to log exact name
     text: 'not.include.text',
     exactTexts: 'not.have.exactTexts',

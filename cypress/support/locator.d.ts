@@ -36,6 +36,11 @@ declare class Locator {
     options?: Partial<Cypress.Loggable & Cypress.Timeoutable>,
   ): Cypress.Chainable<JQuery<E>>
 
+  find<E extends Node = HTMLElement>(
+    selector: string, 
+    options?: Partial<Cypress.Loggable & Cypress.Timeoutable & Cypress.Shadow>,
+  ): Cypress.Chainable<JQuery<E>>
+
   // --- Assertions --- //
 
   /**
