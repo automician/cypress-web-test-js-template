@@ -8,21 +8,28 @@ declare namespace Cypress {
      * @example
      * cy.get('#foo').setValue('bar')
      */
-    setValue(value: string): Chainable<any> // TODO: shouldn't it be Chainable<Subject> here?
+    setValue(
+      value: string,
+      options?: Partial<Cypress.TypeOptions>,
+    ): Cypress.Chainable<JQuery<any>>
 
     /**
      * Alias to .type('{enter}')
      * @example
      * cy.get('#comment').type('hello, world!').pressEnter()
      */
-    pressEnter(): Chainable<any>
+    pressEnter(
+      options?: Partial<Cypress.TypeOptions>
+    ): Cypress.Chainable<JQuery<any>>
 
     /**
      * Alias to .type('{esc}')
      * @example
      * cy.get('#comment').type('hello, world!').pressEscape()
      */
-    pressEscape(): Chainable<any>
+    pressEscape(
+      options?: Partial<Cypress.TypeOptions>
+    ): Cypress.Chainable<JQuery<any>>
 
     // TODO: consider overriding get to be like the by implemenation below
     //       and then use by as alias to original get

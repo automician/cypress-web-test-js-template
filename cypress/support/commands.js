@@ -27,24 +27,24 @@
 Cypress.Commands.add(
   'setValue', 
   { prevSubject: 'element'}, 
-  (subject, value) => { 
-    cy.get(subject).clear().type(value)
+  (subject, value, options={}) => { 
+    cy.get(subject).clear().type(value, options)
   }
 )
 
 Cypress.Commands.add(
   'pressEnter', 
   { prevSubject: 'element'}, 
-  (subject, value) => { 
-    cy.get(subject).type('{enter}')
+  (subject, options={}) => { 
+    cy.get(subject).type('{enter}', options)
   }
 )
 
 Cypress.Commands.add(
   'pressEscape', 
   { prevSubject: 'element'}, 
-  (subject, value) => { 
-    cy.get(subject).type('{esc}')
+  (subject, options) => { 
+    cy.get(subject).type('{esc}', options)
   }
 )
 

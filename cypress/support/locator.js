@@ -4,8 +4,8 @@ export class Locator {
     this.selector = selector
   }
 
-  get() {
-    return cy.the(this.selector)
+  get(options={}) {
+    return cy.the(this.selector, options)
   }
 
   // --- Element builders --- //
@@ -23,6 +23,7 @@ export class Locator {
     return this.get().filter(selector, options)
   }
 
+  /** @param {string} selector */
   by(selector, options={}) {
     // const isWordWithDashesUnderscoresOrNumbers = (selector) => {
     //   return /^[a-zA-Z_0-9\-]+$/g.test(selector)
@@ -78,27 +79,27 @@ export class Locator {
     return this.get().submit(options)
   }
 
-  setValue(text) {
-    return this.get().type(text)
+  setValue(text, options={}) {
+    return this.get().setValue(text, options)
   }
 
   click(options={}) {
     return this.get().click(options)
   }
 
-  doubleClick() {
-    return this.get().dblclick()
+  doubleClick(options={}) {
+    return this.get().dblclick(options)
   }
 
-  hover() {
-    return this.get().trigger('mouseover')
+  hover(options={}) {
+    return this.get().trigger('mouseover', options)
   }
 
-  pressEnter() {
-    return this.get().pressEnter()
+  pressEnter(options={}) {
+    return this.get().pressEnter(options)
   }
 
-  pressEscape() {
-    return this.get().pressEscape()
+  pressEscape(options={}) {
+    return this.get().pressEscape(options)
   }
 }

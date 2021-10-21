@@ -1,7 +1,18 @@
 /// <reference types="cypress" />
 
 declare class Locator {
-  get(): Cypress.Chainable<any>
+  selector: string
+  
+  constructor(selector: string)
+
+  get<E extends Node = HTMLElement>(
+    options?: Partial<
+      Cypress.Loggable 
+      & Cypress.Timeoutable 
+      & Cypress.Withinable 
+      & Cypress.Shadow
+    >
+  ): Cypress.Chainable<JQuery<E>>
 
   // --- Element builders --- //
 
@@ -38,7 +49,11 @@ declare class Locator {
 
   find<E extends Node = HTMLElement>(
     selector: string, 
-    options?: Partial<Cypress.Loggable & Cypress.Timeoutable & Cypress.Shadow>,
+    options?: Partial<
+      Cypress.Loggable 
+      & Cypress.Timeoutable 
+      & Cypress.Shadow
+    >,
   ): Cypress.Chainable<JQuery<E>>
 
   // --- Assertions --- //
@@ -54,28 +69,55 @@ declare class Locator {
    * cy.get('#primary-btn').should('have.text', 'Ok')
    * cy.get('#save-btn').should('have.attr', 'role', 'action')
    */
-  should(match: string, ...expected: any[]): Cypress.Chainable<JQuery<HTMLElement>>
+  should(
+    match: string, 
+    ...expected: any[],
+  ): Cypress.Chainable<JQuery<HTMLElement>>
 
   // --- Actions --- //
 
-  type(text: string, options?: Partial<Cypress.TypeOptions>): Cypress.Chainable<JQuery<HTMLElement>>
+  type(
+    text: string, 
+    options?: Partial<Cypress.TypeOptions>,
+  ): Cypress.Chainable<JQuery<HTMLElement>>
 
-  clear(options?: Partial<Cypress.ClearOptions>): Cypress.Chainable<JQuery<HTMLElement>>
+  clear(
+    options?: Partial<Cypress.ClearOptions>
+  ): Cypress.Chainable<JQuery<HTMLElement>>
 
-  submit(options?: Partial<Cypress.Loggable & Cypress.Timeoutable>): Cypress.Chainable<JQuery<HTMLElement>>
+  submit(
+    options?: Partial<Cypress.Loggable & Cypress.Timeoutable>
+  ): Cypress.Chainable<JQuery<HTMLElement>>
 
-  setValue(text: string): Cypress.Chainable<JQuery<HTMLElement>>
+  setValue(
+    text: string, 
+    options?: Partial<Cypress.TypeOptions>,
+  ): Cypress.Chainable<JQuery<HTMLElement>>
 
-  click(options?: Partial<Cypress.ClickOptions>): Cypress.Chainable<JQuery<HTMLElement>>
+  click(
+    options?: Partial<Cypress.ClickOptions>
+  ): Cypress.Chainable<JQuery<HTMLElement>>
 
-  doubleClick(options?: Partial<Cypress.ClickOptions>): Cypress.Chainable<JQuery<HTMLElement>>
+  doubleClick(
+    options?: Partial<Cypress.ClickOptions>
+  ): Cypress.Chainable<JQuery<HTMLElement>>
 
   /**
    * Simulates hover via .trigger('mousover')
    */
-  hover(): Cypress.Chainable<JQuery<HTMLElement>>
+  hover(
+    options?: Partial<
+      Cypress.TriggerOptions 
+      & Cypress.ObjectLike 
+      & MouseEvent
+    >
+  ): Cypress.Chainable<JQuery<HTMLElement>>
 
-  pressEnter(): Cypress.Chainable<JQuery<HTMLElement>>
+  pressEnter(
+    options?: Partial<Cypress.TypeOptions>
+  ): Cypress.Chainable<JQuery<HTMLElement>>
 
-  pressEscape(): Cypress.Chainable<JQuery<HTMLElement>>
+  pressEscape(
+    options?: Partial<Cypress.TypeOptions>
+  ): Cypress.Chainable<JQuery<HTMLElement>>
 }
