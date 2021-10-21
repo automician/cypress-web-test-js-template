@@ -53,7 +53,7 @@ Cypress.Commands.add(
  * for consistency with Cypress and easier understanding by newcomers
  * which can be lost in the variety of differences 
  */
-Cypress.Commands.add('the', (selector, ...args) => {
+Cypress.Commands.add('the', (selector, options={}) => {
   // TODO: find better name
   //       now it's called by definite article «the»
   //       pointing to the fact that it will find the actual element in DOM
@@ -66,10 +66,10 @@ Cypress.Commands.add('the', (selector, ...args) => {
 
   // TODO: consider moving these selectors transformations to config or plugins 
   if (selector.startsWith('text=')) {  
-    return cy.contains(selector.substring(5))
+    return cy.contains(selector.substring(5), options)
   } else if (isWordWithDashesUnderscoresOrNumbers(selector)) {
-    return cy.get(`[data-qa=${selector}]`, ...args)
+    return cy.get(`[data-qa=${selector}]`, options)
   } else {
-    return cy.get(selector, ...args)
+    return cy.get(selector, options)
   }
 })

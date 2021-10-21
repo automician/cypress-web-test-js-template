@@ -27,7 +27,7 @@ declare namespace Cypress {
     // TODO: consider overriding get to be like the by implemenation below
     //       and then use by as alias to original get
     /**
-     * Alias to cy.get(selector) with extra features:
+     * Alias to cy.get(selector, options) with extra features:
      * - if starts with 'text=Some text' then equals to cy.contains('Some text')
      * - if contains only words separated by _ or - then equals to cy.get(`[data-qa=${selector}]`)
      * - equals to cy.get(selector) otherwise
@@ -36,6 +36,14 @@ declare namespace Cypress {
      * cy.the('element-with-dedicated-data-qa-attribute-value').click()
      * cy.the('#element-with-standard-id-attribute').click()
      */
-    the(selector: string): Chainable<any>
+    the<E extends Node = HTMLElement>(
+      selector: string, 
+      options?: Partial<
+        Cypress.Loggable 
+        & Cypress.Timeoutable 
+        & Cypress.Withinable 
+        & Cypress.Shadow
+      >,
+    ): Cypress.Chainable<JQuery<E>>
   }
 }
