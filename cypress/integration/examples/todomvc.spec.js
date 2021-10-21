@@ -84,6 +84,7 @@ describe('TodoMVC user', () => {
     newTodo().type('a{enter}')
     newTodo().type('b{enter}')
     newTodo().type('c{enter}')
+    // @ts-ignore
     todos().should('haveExactTexts', 'a', 'b', 'c')
 
     // same as in previous example...

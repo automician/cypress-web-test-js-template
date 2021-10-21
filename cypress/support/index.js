@@ -23,10 +23,12 @@ import './commands'
 global.browser = cy
 
 
+// @ts-ignore
 import { Locator } from './locator'
 global.s = (selector) => new Locator(selector)
 
 
+// @ts-ignore
 import { be, have } from './conditions'
 global.be = be
 global.have = have

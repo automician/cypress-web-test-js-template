@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "checkJs": true,
+    "maxNodeModuleJsDepth": 1,
+    "target": "ES2021",
     "allowJs": true,
     "types": ["cypress"],
     "noEmit": true
