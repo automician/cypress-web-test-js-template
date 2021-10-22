@@ -3,6 +3,20 @@
 declare namespace Cypress {
   interface Chainer<Subject> {
     /**
+    * Asserts existance of matched elements by selector. 
+    * Similar to .should(($elements) => { expect($elements.filter(selector).length).to.be.gt(0) })
+    * @param selector
+    * */
+    (chainer: 'have.filtered', selector: string): Chainable<Subject>
+
+    /**
+    * Asserts absence of elements matched by selector. 
+    * Similar to .should(($elements) => { expect($elements.filter(selector).length).to.be.eq(0) })
+    * @param selector
+    * */
+    (chainer: 'not.have.filtered', selector: string): Chainable<Subject>
+
+    /**
     * Asserts existance of elements found by selector. 
     * Similar to .should(($elements) => { expect($elements.has(selector).length).to.be.gt(0) })
     * @param selector
@@ -97,6 +111,7 @@ declare const be: {
 }
 
 declare const have: {
+  filtered: string
   the: string,
   elements: string,
   exactTexts: string,
@@ -112,6 +127,7 @@ declare const have: {
   lengthAtMost: string,
   lengthWithin: string,
   no: {
+    filtered: string
     elements: string,
     exactText: string,
     text: string,

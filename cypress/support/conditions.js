@@ -67,15 +67,15 @@ const elementsCollectionHaveExactTexts = (_chai, utils) => {
       actualTexts.length === expectedTexts.length 
       && actualTexts.every((actual, i) => actual === expectedTexts[i]),
       // msg or fn to describe failure
-      `elements by ${$elements.selector} `
+      `${$elements.selector} `
       + 'should have exact texts: #{exp}'
       + '\nactual texts: #{act}'
       + '\nactual colllection:'
       + '\n#{this}'
       ,    
       // msg or fn to describe negated failure
-      `expected elements by ${$elements.selector} `
-      + 'to not have exact texts: #{exp}'
+      `${$elements.selector} `
+      + 'should not have exact texts: #{exp}'
       + '\nactual texts: #{act}'
       + '\nactual colllection:'
       + '\n#{this}'
@@ -112,15 +112,15 @@ const elementsCollectionHaveTexts = (_chai, utils) => {
       actualTexts.length === expectedTexts.length 
       && actualTexts.every((actual, i) => actual.includes(expectedTexts[i])),
       // msg or fn to describe failure
-      `elements by ${$elements.selector} `
+      `${$elements.selector} `
       + 'should have texts: #{exp}'
       + '\nactual texts: #{act}'
       + '\nactual colllection:'
       + '\n#{this}'
       ,    
       // msg or fn to describe negated failure
-      `expected elements by ${$elements.selector} `
-      + 'to not have texts: #{exp}'
+      `${$elements.selector} `
+      + 'should not have texts: #{exp}'
       + '\nactual texts: #{act}'
       + '\nactual colllection:'
       + '\n#{this}'
@@ -139,25 +139,26 @@ const elementsCollectionHaveTexts = (_chai, utils) => {
 
 chai.use(elementsCollectionHaveTexts)
 
-const elementsCollectionHaveInnerElements= (_chai, utils) => {
+const elementsCollectionHaveDescendants = (_chai, utils) => {
 
-  function assertElements(selector) {
+  function assertDescendants(selector) {
+    // TODO: add {visible: boolean} parameter
     const $elements = this._obj
     const actualFoundLength = $elements.has(selector).length
 
     this.assert(
       // expression to be tested
-      actualFoundLength >= 0,
+      actualFoundLength > 0,
       // msg or fn to describe failure
-      `elements by ${$elements.selector} `
-      + 'should have more than 0 elements found by: #{exp}'
+      `${$elements.selector} `
+      + 'should have at least 1 element found by #{exp}'
       + '\nactual found elements length: #{act}'
       + '\nactual colllection:'
       + '\n#{this}'
       ,    
       // msg or fn to describe negated failure
-      `expected elements by ${$elements.selector} `
-      + 'should have 0 elmeents found by: #{exp}'
+      `${$elements.selector} `
+      + 'should have 0 elmeents found by #{exp}'
       + '\nactual found elements length: #{act}'
       + '\nactual colllection:'
       + '\n#{this}'
@@ -171,10 +172,48 @@ const elementsCollectionHaveInnerElements= (_chai, utils) => {
     )
   }
 
-  _chai.Assertion.addMethod('elements', assertElements)
+  _chai.Assertion.addMethod('elements', assertDescendants)
 }
 
-chai.use(elementsCollectionHaveInnerElements)
+chai.use(elementsCollectionHaveDescendants)
+
+const elementsCollectionHaveFiltered = (_chai, utils) => {
+
+  function assertFiltered(selector) {
+    // TODO: add {visible: boolean} parameter
+    const $elements = this._obj
+    const actualFoundLength = $elements.filter(selector).length
+    
+    this.assert(
+      // expression to be tested
+      actualFoundLength > 0,
+      // msg or fn to describe failure
+      `${$elements.selector} `
+      + 'should have at least 1 matched element by #{exp}'
+      + '\nactual matched elements length: #{act}'
+      + '\nactual colllection:'
+      + '\n#{this}'
+      ,    
+      // msg or fn to describe negated failure
+      `${$elements.selector} `
+      + 'should have 0 matched elmeents by #{exp}'
+      + '\nactual matched elements length: #{act}'
+      + '\nactual colllection:'
+      + '\n#{this}'
+      ,    
+      // expected
+      selector,
+      // actual
+      actualFoundLength, 
+      // show diff?
+      false, 
+    )
+  }
+
+  _chai.Assertion.addMethod('filtered', assertFiltered)
+}
+
+chai.use(elementsCollectionHaveFiltered)
 
 // --- AIASES --- // 
 
@@ -202,6 +241,7 @@ export const be = {
 }
 
 export const have = {
+  filtered: 'have.filtered',
   the: 'have.elements',
   elements: 'have.elements',
   exactText: 'have.text', // TODO: implement as custom to log exact name
@@ -219,6 +259,7 @@ export const have = {
   lengthAtMost: 'have.length.at.most',
   lengthWithin: 'have.length.within',
   no: {
+    filtered: 'not.have.filtered',
     elements: 'not.have.elements',
     exactText: 'not.have.text', // TODO: implement as custom to log exact name
     text: 'not.include.text',
