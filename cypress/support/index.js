@@ -25,8 +25,9 @@ global.browser = cy
 
 // @ts-ignore
 import { Locator } from './locator'
-global.s = (selector) => new Locator(selector)
-
+global.s = (selector, options={}) => new Locator({
+  path: selector,
+}, options)
 
 // @ts-ignore
 import { be, have } from './conditions'
