@@ -28,6 +28,7 @@ Cypress.Commands.add(
   'setValue', 
   { prevSubject: 'element'}, 
   (subject, value, options={}) => { 
+    // TODO: shouldn't we use cy.wrap over cy.get below? need to check some official examples of custom commands...
     cy.get(subject).clear().type(value, options)
   }
 )
@@ -73,3 +74,29 @@ Cypress.Commands.add('the', (selector, options={}) => {
     return cy.get(selector, options)
   }
 })
+
+Cypress.Commands.add(
+  'by', 
+  { prevSubject: 'element'}, 
+  (subject, selector, options) => { 
+    // const isWordWithDashesUnderscoresOrNumbers = (selector) => {
+    //   return /^[a-zA-Z_0-9\-]+$/g.test(selector)
+    // }
+    if (typeof selector === 'function') {
+      return cy.wrap(subject).filter(selector, options)
+    } else if (selector.startsWith('text=')) {
+      return cy.wrap(subject).filter(
+        `:contains(${selector.substring(5)})`, 
+        options,
+      )
+    } else if (selector.startsWith(' ') || selector.startsWith('>')) {  // TODO: should we count here + and ~ ? 
+      return cy.wrap(subject).filter(`:has(${selector})`, options)
+    // // TODO: do we need to understand words as data-qa attr values?
+    // //       same way like we do in custom cy.the(selector) ?  
+    // } else if (isWordWithDashesUnderscoresOrNumbers(selector)) {  
+    //   return this._filter(`[data-qa=${selector}]`, options)
+    } else {
+      return cy.wrap(subject).filter(selector, options)
+    }
+  }
+)
