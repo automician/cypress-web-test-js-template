@@ -70,5 +70,11 @@ declare namespace Cypress {
       selector: string, 
       options?: Partial<Cypress.Loggable & Cypress.Timeoutable>,
     ): Cypress.Chainable<JQuery<E>>
+
+    /**
+     * Filter DOM element(s) from a set of DOM elements. 
+     * Opposite of .by(), i.e. .filter() with additional conversions ;)
+     */
+    not(selector: string, options?: Partial<Cypress.Loggable & Cypress.Timeoutable>): Cypress.Chainable<JQuery<HTMLElement>>
   }
 }

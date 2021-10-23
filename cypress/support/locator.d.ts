@@ -67,6 +67,19 @@ declare class Locator {
   ): Locator
 
   /**
+   * Lazy ratriable version of cy.not(selector, options)
+   * with additional conversions like in locator.by(selector, options)
+   * being an opposite of locator.by ;)
+   */
+  not(
+    selector: string, 
+    options?: Partial<
+      Cypress.Loggable 
+      & Cypress.Timeoutable 
+    >,
+  ): Locator
+
+  /**
    * Lazy ratriable version of cy.filter(selector, options)
    * @param selector 
    * @param options 

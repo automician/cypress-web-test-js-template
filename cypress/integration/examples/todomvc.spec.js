@@ -14,11 +14,11 @@ describe('TodoMVC user', () => {
 
     todos.by('text=b').find('.toggle').click()
     todos.by('.completed').should(have.exactTexts, 'b1')
-    todos.by('text=b').by(':not(.completed)').should(have.exactTexts, 'b2')
+    todos.by('text=b').not('.completed').should(have.exactTexts, 'b2')
 
-    todos.by('text=b').by(':not(.completed)').find('.toggle').click()
+    todos.by('text=b').not('.completed').find('.toggle').click()
     todos.by('.completed').should(have.exactTexts, 'b1', 'b2')
-    todos.by(':not(.completed)').should(have.exactTexts, 'a', 'c')
+    todos.not('.completed').should(have.exactTexts, 'a', 'c')
   })
 
   /* --- Below we compare this Framework with raw Cypress --- *
@@ -37,7 +37,7 @@ describe('TodoMVC user', () => {
     const newTodo = s('#new-todo')
     const todos = s('#todo-list>li')
     const completed = todos.filter('.completed')
-    const active = todos.filter(':not(.completed)')
+    const active = todos.not('.completed')
     const complete = (todo) => {
       todos.filter(`:contains(${todo})`).find('.toggle').click()
     }
@@ -69,7 +69,7 @@ describe('TodoMVC user', () => {
     const newTodo = () => cy.get('#new-todo')
     const todos = () => cy.get('#todo-list>li')
     const completed = () => todos().filter('.completed')
-    const active = () => todos().filter(':not(.completed)')
+    const active = () => todos().not('.completed')
     const complete = (todo) => {
       const containsTodo = `:contains(${todo})`
       const toggle = '.toggle'

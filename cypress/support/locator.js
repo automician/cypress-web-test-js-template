@@ -37,7 +37,7 @@
  * like `by('>.edit')` converts automatically to `filter('has(.edit)')`.
  * 
  * Otherwise, if we can't add any extra bonus to existing cy query,
- * we keep it name the same.
+ * we try to keep its name the same.
  * E.g. while eq in `.filter('.completed').eq(index)`
  * is pretty not obvious for a common web user
  * and something like `.filter('.completed').at(index)`
@@ -47,6 +47,19 @@
  * We already build pretty complicated wrapper over pretty complex internally Cypress
  * with pretty big documentation – let's not add even more complexity:)
  * 
+ * Sometimes, we break a consistency for extreme conciseness. 
+ * In general it's not the best recipe to follow:)
+ * For example, we added a locator.not(selector) alias to cy.not(selector), 
+ * and... we changed its default behaviour! by adding extra features 
+ * – same conversion as we added to locator.by on top of cy.filter. 
+ * Probably it would be better to be consistent
+ * with «locator.by with different name for extras on top of original cy.filter» pattern
+ * Then we would name it like locator.byNot with extras on top of cy.not.
+ * But we couldn't resist the consiseness and clarity of .not('.completed') 
+ * comparing to .byNot('.completed').
+ * As a result – we had to overwrite original cy.not to add same extras...
+ * Hence, – changing the orignal behaviour of cy command :( 
+ * Think twice when you do something like this;)
  */
 export class Locator {
 
@@ -311,6 +324,34 @@ export class Locator {
     //   return this._filter(`[data-qa=${selector}]`, options)
     } else {
       return this.filter(selector, options)
+    }
+  }
+
+  _notSubQuery(selector, options={}) {
+    const path = `-not ${selector}`
+    const query = (subject) => subject.not(selector, options)
+
+    return this._subQuery({ path, query })
+  }
+
+  not(selector, options={}) {
+    // const isWordWithDashesUnderscoresOrNumbers = (selector) => {
+    //   return /^[a-zA-Z_0-9\-]+$/g.test(selector)
+    // }
+
+    // TODO: consider DRYing this «conversion» logic, duplicated in other commands like cy.by, cy.the, etc.
+    if (typeof selector === 'function') { 
+      return this._notSubQuery(selector, options)
+    } else if (selector.startsWith('text=')) {
+      return this._notSubQuery(`:contains(${selector.substring(5)})`, options)
+    } else if (selector.startsWith(' ') || selector.startsWith('>')) {  // TODO: should we count here + and ~ ? 
+      return this._notSubQuery(`:has(${selector})`, options)
+    // // TODO: do we need to understand words as data-qa attr values?
+    // //       same way like we do in custom cy.the(selector) ?  
+    // } else if (isWordWithDashesUnderscoresOrNumbers(selector)) {  
+    //   return this._filter(`[data-qa=${selector}]`, options)
+    } else {
+      return this._notSubQuery(selector, options)
     }
   }
 

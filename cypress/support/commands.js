@@ -79,12 +79,26 @@ Cypress.Commands.add(
   'by', 
   { prevSubject: 'element'}, 
   (subject, selector, options) => { 
+
     // const isWordWithDashesUnderscoresOrNumbers = (selector) => {
     //   return /^[a-zA-Z_0-9\-]+$/g.test(selector)
     // }
     if (typeof selector === 'function') {
       return cy.wrap(subject).filter(selector, options)
     } else if (selector.startsWith('text=')) {
+      /**
+       * TODO: consider customizing Cypress logs ...
+      Cypress.log({
+        $el: subject,
+        name: 'by',
+        message: `${selector} (~> .filter(:contains${selector.substring(5)}))`,
+      })
+       * right now, we just keep it logged same way and in Cypress
+       * i.e. we see the "filter" command being called in the log
+       * this might be good, as we see the actual happening under the hood
+       * yet... adding "by" context might help to identify where in the code
+       * was this call that we see in the log as "filter" ;)
+       */
       return cy.wrap(subject).filter(
         `:contains(${selector.substring(5)})`, 
         options,
@@ -97,6 +111,27 @@ Cypress.Commands.add(
     //   return this._filter(`[data-qa=${selector}]`, options)
     } else {
       return cy.wrap(subject).filter(selector, options)
+    }
+  }
+)
+
+/* --- Cypress Command Overrides --- 
+ *
+ * see some good example at: 
+ * https://docs.cypress.io/api/cypress-api/custom-commands#Overwrite-type-command 
+ */
+
+Cypress.Commands.overwrite(
+  'not',
+  (originalFn, subject, selector, options = {}) => {
+    if (typeof selector === 'function') { 
+      return originalFn(subject, selector, options)
+    } else if (selector.startsWith('text=')) {
+      return originalFn(subject, `:contains(${selector.substring(5)})`, options)
+    } else if (selector.startsWith(' ') || selector.startsWith('>')) {  // TODO: should we count here + and ~ ? 
+      return originalFn(subject, `:has(${selector})`, options)
+    } else {
+      return originalFn(subject, selector, options)
     }
   }
 )
