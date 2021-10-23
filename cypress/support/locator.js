@@ -266,7 +266,8 @@ export class Locator {
                 + `should have at least 1 element by ${path}`
                 + `\nactual elements length: ${actualElementsLength}`
                 + '\nactual colllection:'
-                + `\n${$queried}` // TODO: fix queried object stringification, that currently is [object Object] :(
+                + `\n${$queried.toArray().map((it) => '\n' + it.outerHTML)}` 
+                // TODO: cut outerHTML in a smart and configurable way to eliminate clutter in logs
               )
             }
           })  // TODO: is it possible to cash and reuse aftewards in query?
