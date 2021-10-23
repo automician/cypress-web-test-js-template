@@ -80,11 +80,9 @@ export class Locator {
   }
 
   _guarded() {
-    let last
     this.chain.guards.forEach((guard) => {
-      last = guard()
+      guard()
     })
-    return last  // TODO: do we need to return here anything?
   }
 
   _queryFrom(subject) {
@@ -98,7 +96,31 @@ export class Locator {
   }
 
   get() {
-    this._guarded()
+    /**
+     * first we run all guards, 
+     * i.e. assertions ensuring that next queries chain can pass
+     * (we have to do this in forwards, 
+     * because cypress can retry only the last query in a chain)
+     */
+    this._guarded() /** here we don't use any return value for reuse
+     **because:
+     * 1 we will have only result of first cy.get returned (not other sub-queries)
+     * 2 we disabled logging for this first cy.get 
+     *   because we don't want the clutter from all guards in log
+     *   so such reused cy.get - will don't give valuable info in logs
+     * also... it's kind of not pretty idiomatic to store results of cy.get :)
+     */
+
+    /**
+     * yet on finaly step of providing queried elements
+     * we could reuse both cy.get result 
+     * and even internal full path queried elements
+     * via aliases
+     * but again... we would lost logging... 
+     * logging from cy.get is disabled
+     * and logging from sub-queries was just not created
+     * because we executed sub-queries in guards through JQuery
+     */
     return this._queryFromRoot()
   }
 
@@ -116,10 +138,34 @@ export class Locator {
         get: this.chain.get, 
         guards: [
           ...this.chain.guards,
-          () => this.chain.get({log: false}).should(($elements) => {
-            const queried = this._queryFrom($elements)
-            queried.selector = this.chain.path
-            const actualElementsLength = query(queried).length
+          () => this.chain.get({log: false}).should(($elements) => {  // TODO: move this pattern of "hiding assertions" to a separate function
+            const $queried = this._queryFrom($elements)
+
+            /**
+             * if current guard passes, we could remember via alias the queried elements
+             * like this:
+             
+            cy.wrap($queried).as('__last_queried__')
+             
+             * each next guard would rewrite this alias
+             * so finally, after all guards, 
+             * we would have last queried for reuse in following action like .click()
+             * yet, on DOM change (Stale Elements), 
+             * such «aliased cash» will be rerendered by Cypress,
+             * see for more: 
+             * https://docs.cypress.io/guides/core-concepts/variables-and-aliases#Stale-Elements
+             * 
+             * so why not do this?
+             * becase we will loose the logging of all query path by Cypress
+             * that's why, for now, we can't reuse cashed elements from guards
+             * :(
+             * TODO: maybe, if we find the way to cash «cypress logs»
+             *       in addition to corresponding queried elements, 
+             * then we can come back to this idea...
+             */
+
+            $queried.selector = this.chain.path
+            const actualElementsLength = query($queried).length
             /**
              * Cypress can't hide assertions from log
              * (see more at https://github.com/cypress-io/cypress/issues/7693).
@@ -141,7 +187,7 @@ export class Locator {
                 + `should have at least 1 element by ${path}`
                 + `\nactual elements length: ${actualElementsLength}`
                 + '\nactual colllection:'
-                + `\n${queried}`
+                + `\n${$queried}`
               )
             }
           })  // TODO: is it possible to cash and reuse aftewards in query?
