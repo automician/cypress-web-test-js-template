@@ -80,6 +80,85 @@ export class Locator {
   }
 
   _guarded() {
+
+    /**
+     * GIVEN
+     * const toggle = new Locator(
+     *   {path: '.todo'}
+     * ).filter(':contains(test)').find('.toggle')
+     * WHEN
+     * toggle.click()
+     * THEN
+     * before actual clicking and actual quering elements, that is similar to JQuery's
+     * $('.todo').filter('.contains(test)').find('.toggle')
+     * all guards will be called
+     * to ensure that the `.filter('.contains(test)').find('.toggle')` chain will pass
+     * (Cypress can't ensure this, becauase it retries only the last command in a chain)
+     * So... guards will be called...
+     * In this example there will be 2 guards for each query after get – 
+     * one for .filter('contains(test)') 
+     * second for .filter('.contains(test)').find('.toggle')
+     * we need two of them, because we want to know exactly
+     * which part of the chain fails...
+     * again...
+     * though technically ensuring just the last guard
+     * .filter('.contains(test)').find('.toggle')
+     * would be enough
+     * we want to know, whether we couldn't find the .todo with «test» text
+     * or we couldn't find the .toggle inside existing .todo with «test» text
+     * that's why we need to run also first guard .filter('contains(test)') 
+     * And here goes the question:
+     * if the last guard passes, why do we need to run first, 
+     * if we already ensured that everything is find with our chain?
+     * Seems like - no, it's ok to skip the first guard.
+     * We would need to run the first guard, only if the last one failed... 
+     * Looks like a reasonable optimization to the algorithm of running all guards:
+     * - run all guards in reversed order from last to first, 
+     *   - breaking on first passed guard
+     * But here goes the problem...
+     * Since our guards are based on cy.should(callback),
+     * There is no way to check its failure... 
+     * We can't catch cypress exceptions in a way to handle it in the chain of guards...
+     * see more at: https://docs.cypress.io/guides/core-concepts/conditional-testing#Error-Recovery
+     * Hence, something like this
+     * 
+     
+    if (
+      Array.isArray(this.chain.guards) 
+      && this.chain.guards.length === 0
+    ) return
+
+    const [last, ...rest] = this.chain.guards.reverse()
+    rest.reduce(
+      (prev, guard) => {
+        return prev.then(
+          ({passed}) => {
+            return passed
+              ? {passed}
+              : guard().then(
+                result => ({passed: result}), error => ({failed: error})
+              )
+          }
+        )
+      }, 
+      last().then(
+        result => ({passed: result}), error => ({failed: error})
+      ),
+    ).then(
+      ({failed}) => {
+        if (failed) throw failed
+      }
+    )
+
+     **... will never work, unfortunately :(
+       maybe...
+     * TODO: we could use cy.then(callback) + custom retry-ability impl
+     *       instead of cy.should(callback) with built in retry-ability
+     * but who knows how easy would it be to implement custom impl of retry-ability
+     * maybe one day we try... 
+     * 
+     * but for now let's stick to simple, not oprimized implementation: 
+     */
     this.chain.guards.forEach((guard) => {
       guard()
     })
@@ -187,7 +266,7 @@ export class Locator {
                 + `should have at least 1 element by ${path}`
                 + `\nactual elements length: ${actualElementsLength}`
                 + '\nactual colllection:'
-                + `\n${$queried}`
+                + `\n${$queried}` // TODO: fix queried object stringification, that currently is [object Object] :(
               )
             }
           })  // TODO: is it possible to cash and reuse aftewards in query?
