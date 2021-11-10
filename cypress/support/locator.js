@@ -369,6 +369,13 @@ export class Locator {
     return this._subQuery({ path, query })
   }
 
+  next(selector, options={}) {
+    const path = `-next ${selector}`
+    const query = (subject) => subject.next(selector, options)
+
+    return this._subQuery({ path, query })
+  }
+
   /* --- Assertions --- */
 
   should(match, ...expected) {
@@ -378,6 +385,14 @@ export class Locator {
   /* --- Actions --- */
 
   type(text, options={}) {
+    /*
+     * TODO: should we ignore/do-nothing on undefined?
+     *       probably we should at least make it configurable;)
+    return text == undefined ?
+     this.get()
+     :
+     this.get().type(text, options)
+     */
     return this.get().type(text, options)
   }
 

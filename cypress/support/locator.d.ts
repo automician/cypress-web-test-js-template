@@ -119,6 +119,19 @@ export class Locator {
     >,
   ): Locator
 
+  /**
+   * Lazy ratriable version of cy.find(selector, options)
+   * @param selector 
+   * @param options 
+   */
+  next(
+    selector: string, 
+    options?: Partial<
+      Cypress.Loggable 
+      & Cypress.Timeoutable 
+    >,
+  ): Locator
+
   // --- Assertions --- //
 
   /**
