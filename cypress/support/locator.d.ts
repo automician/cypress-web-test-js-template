@@ -11,15 +11,15 @@ type ParametrizedGetChainableSubject = (
 
 type ReturnsChainableSubject = () => Cypress.Chainable<JQuery<any>>
 
-declare class Locator {
+export class Locator {
   // options: Partial<Cypress.Loggable & Cypress.Timeoutable & Cypress.Withinable & Cypress.Shadow>
 
   constructor(
     chain: { // TODO: not sure this typings are correct... 
       path: string,
-      get: ParametrizedGetChainableSubject,
-      guards: ReturnsChainableSubject[],
-      queries: ReturnsChainableSubject[],
+      get?: ParametrizedGetChainableSubject,
+      guards?: ReturnsChainableSubject[],
+      queries?: ReturnsChainableSubject[],
     }, 
     options: Partial<Cypress.Loggable & Cypress.Timeoutable & Cypress.Withinable & Cypress.Shadow>
   )

@@ -87,57 +87,37 @@ declare namespace Cypress {
   }
 }
 
-// --- Aliases --- // 
+declare namespace Chai {
 
-declare const be: {
-  equalTo: string,
-  visible: string,
-  hidden: string,
-  selected: string,
-  inDOM: string,
-  empty: string,
-  enabled: string,
-  matching: string,
-  containing: string,
-  not: {
-    equalTo: string,
-    selected: string,
-    inDOM: string,
-    empty: string,
-    enabled: string,
-    matching: string,
-    containing: string,
-  }
-}
+  interface Assertion {
+      /**
+      * Asserts existance elements matched by selector. 
+      * Similar to expect($elements.filter(selector).length).to.be.eq(0)
+      * @param selector
+      * */
+      filtered(selector: string): Assertion
+      /**
+      * Asserts existance elements found by selector. 
+      * Similar to expect($elements.find(selector).length).to.be.eq(0)
+      * @param selector
+      * */
+      elements(selector: string): Assertion
+      /**
+      * Asserts existance elements found by selector. 
+      * Is an alias to `elements` chainer
+      * Similar to expect($elements.find(selector).length).to.be.eq(0)
+      * @param selector
+      * */
+      the(selector: string): Assertion
 
-declare const have: {
-  filtered: string
-  the: string,
-  elements: string,
-  exactTexts: string,
-  text: string,
-  attr: string,
-  value: string,
-  valueContaining: string,
-  cssClass: string,
-  length: string,
-  lengthGreaterThan: string,
-  lengthLessThan: string,
-  lengthAtLeast: string,
-  lengthAtMost: string,
-  lengthWithin: string,
-  no: {
-    filtered: string
-    elements: string,
-    exactText: string,
-    text: string,
-    attr: string,
-    value: string,
-    valueContaining: string,
-    cssClass: string,
-    length: string,
-    lengthGreaterThan: string,
-    lengthLessThan: string,
-    lengthWithin: string,
+      /**
+       * Asserts texts of elements collection (every element by contains)
+       */
+      texts(...values: string[]): Assertion
+
+      /**
+       * Asserts texts of elements collection (every element by exact equals)
+       */
+      exactTexts(...values: string[]): Assertion
   }
 }
