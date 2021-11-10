@@ -20,7 +20,11 @@
         "plugin:chai-friendly/recommended"
     ],
     "rules": {
-        "max-len": ["error", { "code": 80, "ignoreComments": true}],
+        "max-len": ["error", { 
+            "code": 80, 
+            "ignorePattern": "^import",
+            "ignoreComments": true
+        }],
         "cypress/no-pause": "error"
     }
 }
