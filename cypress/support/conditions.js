@@ -1,6 +1,5 @@
 // --- CUSTOM CONDITIONS --- // 
 
-
 const elementsCollectionHaveExactTexts = (_chai, utils) => {
   // this style of implementation should provide proper hints when autocomplete // TODO: make this hint work...
   // if you don't need it, consider the simpler version
@@ -32,9 +31,14 @@ const elementsCollectionHaveExactTexts = (_chai, utils) => {
   function assertExactTexts(...texts) {
     const $elements = this._obj
     const expectedTexts = (
+      (
         Array.isArray(texts) && texts.length === 1 && Array.isArray(texts[0])
-    ) ? texts[0]
-      : texts
+      ) ? 
+        texts[0]
+        : 
+        texts
+    ).map((it) => it === undefined ? undefined : it.toString())
+    // ).map((it) => it?.toString())
 
     const actualTexts = $elements.map((i, element) => { 
       return Cypress.$(element).text().trim()
@@ -67,9 +71,9 @@ const elementsCollectionHaveExactTexts = (_chai, utils) => {
       + '\n#{this}'
       ,    
       // expected
-      expectedTexts,
+      '[' + expectedTexts.join(', ') + ']',
       // actual
-      actualTexts, 
+      '[' + actualTexts.join(', ') + ']',
       // show diff?
       false, 
     )
@@ -85,12 +89,17 @@ const elementsCollectionHaveTexts = (_chai, utils) => {
   function assertTexts(...texts) {
     const $elements = this._obj
     const expectedTexts = (
+      (
         Array.isArray(texts) && texts.length === 1 && Array.isArray(texts[0])
-    ) ? texts[0]
-      : texts
+      ) ? 
+        texts[0]
+        : 
+        texts
+    ).map((it) => it === undefined ? undefined : it.toString())
+    // ).map((it) => it?.toString())
 
-    const actualTexts = $elements.map((i, element) => { 
-      return Cypress.$(element).text().trim()
+    const actualTexts = $elements.map(function() { 
+      return Cypress.$(this).text().trim()
     }).get()
 
     this.assert(
@@ -112,9 +121,9 @@ const elementsCollectionHaveTexts = (_chai, utils) => {
       + '\n#{this}'
       ,    
       // expected
-      expectedTexts,
+      '[' + expectedTexts.join(', ') + ']',
       // actual
-      actualTexts, 
+      '[' + actualTexts.join(', ') + ']', 
       // show diff?
       false, 
     )
@@ -200,4 +209,3 @@ const elementsCollectionHaveFiltered = (_chai, utils) => {
 }
 
 chai.use(elementsCollectionHaveFiltered)
-
