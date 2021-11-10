@@ -4,7 +4,7 @@
     "maxNodeModuleJsDepth": 1,
     "target": "ES2021",
     "allowJs": true,
-    "types": ["cypress"],
+    "types": ["cypress", "cypress-file-upload"],
     "noEmit": true
   },
   "include": ["**/*.*"]
