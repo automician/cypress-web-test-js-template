@@ -28,7 +28,7 @@ export const form = (selector) => steps({
             )
 
       const defaults = {
-        by: '#' + key,
+        by: `[name=${key}],[data-qa^=${key}],#${key}`, // TODO: DRY it by reusing dataElement
         value: prop, 
         set: default_set(prop),
         click: undefined, // `click: true` is an alias to `value: true` 
@@ -61,7 +61,7 @@ export const form = (selector) => steps({
   },
 
   submit() {
-    s(selector).find('#submit').click()
+    this.element().find('#submit,[type=submit]').click()
     return this
   },
 
