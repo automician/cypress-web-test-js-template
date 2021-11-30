@@ -1,3 +1,4 @@
+import { Locator } from '../../../../locator'
 import { steps } from "../../../../logging"
 import { Component } from "./component"
 
@@ -7,65 +8,64 @@ export const form = (selector) => steps({
   selector,
 
   toString() {
-    return `Form by ${selector}`
+    // @ts-ignore
+    return `Form by ${this._elementDescription()}`
   },
 
   fill(data) {
     Object.keys(data).forEach((key) => {
       const prop = data[key]
 
-      const default_set = (value) => (selector) => (typeof value === 'string') ?
-        this.element().find(selector).type(value)
-        :
-        (typeof value === 'boolean') && value ?
-          this.element().find(selector).click()
-          : 
-          typeof value === 'object' && value.set? 
-            value.set(selector)
-            :
-            console.log(
-              `nothing to set for key: ${key}, prop: ${value}`
-            )
+      const defaultSetValue = (
+        { value, clearDefault },
+      // eslint-disable-next-line no-shadow
+      ) => (selector) => {
+        const input = selector instanceof Locator ?
+          selector // TODO:  be something like selector.within(this.element())
+          :
+          this.element().find(selector)
 
-      const defaults = {
-        by: `[name=${key}],[data-qa^=${key}],#${key}`, // TODO: DRY it by reusing dataElement
-        value: prop, 
-        set: default_set(prop),
-        click: undefined, // `click: true` is an alias to `value: true` 
-                          // that is processed above in defaults for `set: ...`
+        return typeof value === 'string' ?
+          clearDefault ?
+            input.clear().type(value)
+            :
+            input.type(value)
+          :
+          (typeof value === 'boolean') && value ?
+            input.click()
+            :
+            cy.log(
+              `nothing to set for key: ${key}, prop: ${value}`,
+            )
       }
 
-      const {by, value, set, click, ..._} = typeof prop === 'object' ?
-        prop
-        :
-        defaults
+      const setter = {
+        value: prop?.value ?? prop,
+        by: prop?.by ?? `[name=${key}],[data-type^=${key}],#${key}`,
+        clearDefault: prop?.clearDefault ?? false,
+        // eslint-disable-next-line no-shadow
+        set(selector) {
+          return (prop?.set ?? defaultSetValue(
+            { value: this.value, clearDefault: this.clearDefault },
+          ))(selector)
+        },
+        // click: undefined, // `click: true` is an alias to `value: true`
+        // that is processed above in defaults for `set...`
+      }
 
-      // todo: ...
-      // if (click) {
-      //   set(by)
-      // }
-
-      const final_set = set ?
-        set
-        :
-        default_set(value)
-
-      const final_by = by ?
-        by
-        :
-        defaults.by
-
-      final_set(final_by)
+      setter.set(setter.by)
     })
     return this
   },
 
   submit() {
-    this.element().find('#submit,[type=submit]').click()
+    this.element().find('[type=submit]').click()
     return this
   },
 
+  // eslint-disable-next-line no-unused-vars
   shouldHave(data) {
+    // TODO: implement
     return this
   },
 })
