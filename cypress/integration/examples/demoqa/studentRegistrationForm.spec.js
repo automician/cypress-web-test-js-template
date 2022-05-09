@@ -51,7 +51,7 @@ describe('Student Registration Form', () => {
 
     form('#userForm').fill(userWithAllDetails).submit()
 
-    table('.modal-content .table').shouldHave(
+    table('.modal-content .table').shouldHaveRowsWithAtLeast(
       [
         'Student Name', 
         userWithAllDetails.firstName + ' ' + userWithAllDetails.lastName
@@ -137,7 +137,7 @@ describe('Student Registration Form', () => {
 
     form('#userForm').fill(userWithAllDetails).submit()
 
-    table('.modal-content .table').shouldHave(
+    table('.modal-content .table').shouldHaveRowsWithAtLeast(
       [
         'Student Name', 
         userWithAllDetails.firstName + ' ' + userWithAllDetails.lastName

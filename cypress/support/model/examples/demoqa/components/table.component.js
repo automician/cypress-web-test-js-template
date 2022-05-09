@@ -20,6 +20,10 @@ export const table = (selector) => steps({
     return this.element().find('tbody tr')
   },
 
+  rowBy(text) {
+    return this.rows().by(`text=${text}`)
+  },
+
   /**
    * Asserts exact rows data,
    * expecting all expected cells data to be explicitely specified
@@ -35,7 +39,7 @@ export const table = (selector) => steps({
   /**
    * Asserts that provided data is present.
    * The empty object value `{}` can be used as stub for row to be skipped.
-   * @param  {...object[]} rows
+   * @param  {...object[]} data
    */
   shouldHaveRowsWithAtLeast(...data) {
     this.rows().should(have.length, data.length)
